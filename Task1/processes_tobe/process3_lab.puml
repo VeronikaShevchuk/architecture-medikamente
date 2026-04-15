@@ -1,0 +1,55 @@
+@startuml
+!theme plain
+title DFD TO-BE - Процесс 3: Учёт анализов (с интеграцией API)
+
+actor "Врач" as Doctor
+actor "Пациент" as Patient
+actor "Лаборатория" as Lab
+actor "API Gateway" as APIGateway
+
+database "PostgreSQL Medical" as Medical_DB
+database "MinIO (шифрование)" as FileStorage
+database "ELK (аудит)" as Audit
+database "Озеро данных\n(обезличенное)" as DataLake
+
+rectangle "3.0 Учёт анализов" {
+  rectangle "3.1 Назначение анализа" as Assign
+  rectangle "3.2 Формирование штрих-кода" as Barcode
+  rectangle "3.3 Передача в лабораторию (API)" as SendToLab
+  rectangle "3.4 Получение результатов (webhook)" as ReceiveResults
+  rectangle "3.5 Маскирование PII" as MaskPII
+  rectangle "3.6 Прикрепление к карте" as Attach
+  rectangle "3.7 Уведомление пациента" as NotifyPatient
+}
+
+Doctor --> Assign : "Тип анализа, пациент"
+Assign --> Medical_DB : "Сохранение назначения"
+Assign --> Barcode : "Генерация"
+Barcode --> Patient : "Штрих-код на email"
+
+SendToLab --> Lab : "API POST (маскированное ФИО)"
+Lab --> ReceiveResults : "Webhook (TLS)"
+ReceiveResults --> MaskPII : "Удаление ФИО из результата"
+
+MaskPII --> Attach : "Обезличенный результат"
+Attach --> Medical_DB : "Связь с пациентом по ID"
+
+Attach --> NotifyPatient : "Триггер"
+NotifyPatient --> Patient : "Push / Email: 'Результаты готовы'"
+
+Patient --> Medical_DB : "Просмотр (только свои)"
+
+Medical_DB --> DataLake : "ETL (обезличивание)"
+DataLake --> Lab : "Агрегированная статистика"
+
+Audit --> Medical_DB : "Логирование доступа"
+
+note right of MaskPII
+  <b>Маскирование:</b>
+  • В API к лаборатории → только ID
+  • В результатах → ФИО удалено
+  • В озере данных → обезличено
+  • Только врач видит связь
+endnote
+
+@enduml

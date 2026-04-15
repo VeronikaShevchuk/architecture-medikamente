@@ -1,0 +1,33 @@
+@startuml
+!theme plain
+title DFD - Процесс 1.2: Внесение в журнал (Level 2)
+
+actor "Ресепшен" as Reception
+
+database "Excel-файл\nJournal_Doctor1.xlsx" as Journal1
+database "Excel-файл\nJournal_Doctor2.xlsx" as Journal2
+database "Excel-файл\nJournal_DoctorN.xlsx" as JournalN
+
+rectangle "1.2.1 Выбор врача" as SelectDoctor
+rectangle "1.2.2 Открытие Excel" as OpenExcel
+rectangle "1.2.3 Поиск свободного времени" as FindSlot
+rectangle "1.2.4 Ввод данных" as InputData
+rectangle "1.2.5 Сохранение файла" as SaveFile
+
+Reception --> SelectDoctor : "Врач из списка"
+SelectDoctor --> OpenExcel : "Путь к файлу"
+OpenExcel --> FindSlot : "Просмотр строк"
+FindSlot --> InputData : "Свободное время"
+InputData --> SaveFile : "ФИО, телефон"
+SaveFile --> Journal1 : "Запись"
+SaveFile --> Journal2 : "Запись"
+SaveFile --> JournalN : "Запись"
+
+note right of InputData
+  <b>Ручная операция:</b>
+  - Ввод без валидации
+  - Риск опечаток
+  - Нет проверки дублей
+endnote
+
+@enduml

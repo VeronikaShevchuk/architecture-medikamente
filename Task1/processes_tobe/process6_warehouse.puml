@@ -1,0 +1,51 @@
+@startuml
+!theme plain
+title DFD TO-BE - Процесс 6: Учёт ТМЦ (с автоматизацией)
+
+actor "Сотрудник склада" as Storekeeper
+actor "Поставщик" as Supplier
+actor "Медицинский специалист" as Doctor
+actor "Система авто-заказа" as AutoOrder
+
+database "1С:Торговля и склад\n(клиент-сервер)" as Warehouse
+database "PostgreSQL\n(остатки в реальном времени)" as Stock_DB
+database "ELK (аудит)" as Audit
+database "BI аналитика" as BI
+
+rectangle "6.0 Учёт ТМЦ (TO-BE)" {
+  rectangle "6.1 Приём товара (сканер)" as ReceiveGoods
+  rectangle "6.2 Автоматическое оприходование" as AutoPosting
+  rectangle "6.3 Расход при приёме пациента" as AutoExpense
+  rectangle "6.4 Авто-заказ при остатке < N" as AutoReorder
+  rectangle "6.5 Интеграция с медкартами" as Integration
+  rectangle "6.6 Отчётность и аналитика" as Reporting
+}
+
+Supplier --> ReceiveGoods : "Товар, штрих-код"
+ReceiveGoods --> AutoPosting : "Сканирование"
+AutoPosting --> Warehouse : "Приход"
+
+Doctor --> AutoExpense : "Приём пациента (расходники)"
+AutoExpense --> Stock_DB : "Уменьшение остатка"
+Stock_DB --> Warehouse : "Синхронизация"
+
+Stock_DB --> AutoReorder : "Проверка мин. остатка"
+AutoReorder --> Supplier : "Авто-заказ"
+
+Integration --> Stock_DB : "Связь: услуга → расходники"
+Integration --> Medical_DB : "Списание по факту приёма"
+
+Storekeeper --> Reporting : "Просмотр остатков"
+Reporting --> BI : "Аналитика использования"
+
+Audit --> Warehouse : "Логи списаний"
+
+note right of AutoReorder
+  <b>Автоматизация:</b>
+  • Триггер при остатке < min
+  • Авто-заказ поставщику
+  • Контроль сроков годности
+  • Интеграция с медкартами
+endnote
+
+@enduml

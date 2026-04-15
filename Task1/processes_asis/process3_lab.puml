@@ -1,0 +1,45 @@
+@startuml
+!theme plain
+title DFD - Процесс 3: Учёт анализов и лаборатория (Level 1)
+
+actor "Врач" as Doctor
+actor "Пациент" as Patient
+actor "Лаборатория" as Lab
+actor "Ресепшен" as Reception
+
+database "D4: Реестры анализов\n(Excel по датам)" as LabRegistry
+database "D3: Папка пациента" as PatientFolder
+database "Общий диск" as SharedDrive
+
+rectangle "3.0 Учёт анализов" {
+  rectangle "3.1 Назначение анализа" as Assign
+  rectangle "3.2 Передача в лабораторию" as SendToLab
+  rectangle "3.3 Получение результатов" as GetResults
+  rectangle "3.4 Регистрация в реестре" as Register
+  rectangle "3.5 Прикрепление к карте" as Attach
+}
+
+Doctor --> Assign : "Тип анализа"
+Assign --> Patient : "Направление"
+Patient --> Lab : "Сдаёт анализы"
+Lab --> GetResults : "Результаты (бумага/файл)"
+GetResults --> Reception : "Передача"
+
+Reception --> Register : "Сканирование/ввод"
+Register --> LabRegistry : "Запись в Excel"
+LabRegistry --> SharedDrive : "Хранение"
+
+Reception --> Attach : "Файл результатов"
+Attach --> PatientFolder : "Сохранение"
+PatientFolder --> SharedDrive : "Хранение"
+
+Doctor --> PatientFolder : "Просмотр результатов"
+
+note right of LabRegistry
+  <b>Проблемы:</b>
+  • Реестр доступен всем
+  • Можно подменить файл
+  • Нет контроля целостности
+endnote
+
+@enduml

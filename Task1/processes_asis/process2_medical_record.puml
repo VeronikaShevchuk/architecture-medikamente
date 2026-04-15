@@ -1,0 +1,40 @@
+@startuml
+!theme plain
+title DFD - Процесс 2: Ведение медицинской карты (Level 1)
+
+actor "Пациент" as Patient
+actor "Врач" as Doctor
+
+database "D3: Папка пациента\n(ФИО_ID)" as PatientFolder
+database "D3: Сканы PDF/JPG" as Scans
+database "Общий диск" as SharedDrive
+
+rectangle "2.0 Ведение медкарты" {
+  rectangle "2.1 Осмотр пациента" as Examination
+  rectangle "2.2 Запись диагноза" as Diagnosis
+  rectangle "2.3 Назначение лечения" as Treatment
+  rectangle "2.4 Загрузка документов" as UploadDocs
+}
+
+Patient --> Examination : "Жалобы, симптомы"
+Examination --> Doctor : "Результаты осмотра"
+
+Doctor --> Diagnosis : "Ввод в Excel/Word"
+Diagnosis --> PatientFolder : "Сохранение"
+PatientFolder --> SharedDrive : "Хранение"
+
+Doctor --> Treatment : "Рецепты, процедуры"
+Treatment --> PatientFolder : "Сохранение"
+
+Doctor --> UploadDocs : "Сканы анализов, снимки"
+UploadDocs --> Scans : "JPG/PDF"
+Scans --> SharedDrive : "Хранение"
+
+note right of PatientFolder
+  <b>Специальные ПД:</b>
+  • Диагнозы (ст.10 152-ФЗ)
+  • Нет шифрования
+  • Нет разграничения
+endnote
+
+@enduml

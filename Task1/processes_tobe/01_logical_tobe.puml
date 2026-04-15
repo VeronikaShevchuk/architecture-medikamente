@@ -1,0 +1,61 @@
+@startuml
+!theme plain
+title Логическая DFD - Целевая архитектура (TO-BE)
+' Рекомендация Lucidchart: фокус на бизнес-активности, без технологий
+
+left to right direction
+
+actor "Пациент" as Patient
+actor "Сотрудник" as Employee
+actor "Внешняя лаборатория" as Lab
+
+rectangle "МЕДИКАМЕНТЕ (TO-BE)" {
+  
+  rectangle "1.0\nАутентификация\nи авторизация" as Auth
+  rectangle "2.0\nУправление\nзаписью" as Booking
+  rectangle "3.0\nВедение\nмедкарты" as MedicalRecord
+  rectangle "4.0\nОбработка\nплатежей" as Payment
+  rectangle "5.0\nПредоставление\nотчётов" as Reporting
+  rectangle "6.0\nАудит доступа" as Audit
+  
+  database "Хранилище PII\n(псевдонимизированное)" as PIIStore
+  database "Хранилище медданных\n(зашифрованное)" as MedicalStore
+  database "Хранилище платежей\n(токенизированное)" as PaymentStore
+  database "Озеро данных\n(обезличенное)" as DataLake
+  database "Логи аудита\n(неизменяемые)" as AuditLogs
+}
+
+' Потоки (логические — бизнес-активности)
+Patient --> Auth : "Предоставляет учётные данные"
+Auth --> Patient : "Выдаёт сессию"
+
+Patient --> Booking : "Выбирает услугу, время"
+Booking --> PIIStore : "Сохраняет запись"
+Booking --> Patient : "Подтверждение"
+
+Employee --> Booking : "Просматривает записи (ограниченно)"
+Employee --> MedicalRecord : "Вносит диагноз (только врач)"
+
+Lab --> MedicalRecord : "Передаёт результаты"
+MedicalRecord --> MedicalStore : "Сохраняет"
+MedicalRecord --> Patient : "Показывает результаты"
+
+Patient --> Payment : "Оплачивает"
+Payment --> PaymentStore : "Фиксирует"
+Payment --> Patient : "Выдаёт чек"
+
+Reporting --> DataLake : "Запрашивает агрегаты"
+DataLake --> Reporting : "Обезличенные данные"
+
+Audit --> AuditLogs : "Записывает все действия"
+Audit --> Employee : "Алерты при аномалиях"
+
+legend right
+  <b>Принципы (Privacy by Design):</b>
+  • Минимизация данных
+  • Разделение PII и Medical
+  • Аудит каждого доступа
+  • Обезличивание для аналитики
+endlegend
+
+@enduml

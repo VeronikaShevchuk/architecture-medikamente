@@ -1,0 +1,53 @@
+@startuml
+!theme plain
+title DFD TO-BE - Процесс 4: Приём оплаты (с платёжным шлюзом)
+
+actor "Пациент" as Patient
+actor "Кассир" as Cashier
+actor "Бухгалтер" as Accountant
+
+database "Платёжный шлюз\n(токенизация)" as PaymentGateway
+database "PostgreSQL Finance\n(токены, без карт)" as Finance_DB
+database "1С:Бухгалтерия\n(клиент-сервер)" as Accounting
+database "ELK (аудит)" as Audit
+
+rectangle "4.0 Приём оплаты (TO-BE)" {
+  rectangle "4.1 Онлайн-оплата (ЛК)" as OnlinePayment
+  rectangle "4.2 Оплата у кассира" as CashPayment
+  rectangle "4.3 Токенизация карты" as Tokenize
+  rectangle "4.4 Запись в БД" as WriteFinance
+  rectangle "4.5 Передача в 1С" as SendToAccounting
+  rectangle "4.6 Автоматическая сверка" as AutoReconcile
+}
+
+Patient --> OnlinePayment : "Оплата через ЛК (TLS)"
+OnlinePayment --> PaymentGateway : "Сумма, токен карты"
+
+Cashier --> CashPayment : "Приём наличных/карты"
+CashPayment --> PaymentGateway : "Через ККМ"
+
+PaymentGateway --> Tokenize : "Карта → Токен"
+Tokenize --> Finance_DB : "Сумма, дата, токен (без CVV)"
+
+PaymentGateway --> Patient : "Чек на email/SMS"
+
+WriteFinance --> SendToAccounting : "API выгрузки"
+SendToAccounting --> Accounting : "Проводка"
+
+Finance_DB --> AutoReconcile : "Каждую ночь"
+AutoReconcile --> Accounting : "Сверка с 1С"
+AutoReconcile --> Audit : "Отчёт о расхождениях"
+
+Accountant --> Finance_DB : "Просмотр (только финансисты)"
+Accountant --> AutoReconcile : "Ручная сверка при ошибке"
+
+note right of PaymentGateway
+  <b>Защита платежей:</b>
+  • Карты не хранятся (только токен)
+  • PCI DSS совместимость
+  • 3D Secure
+  • Автоматическая сверка
+  • Устранён двойной учёт
+endnote
+
+@enduml

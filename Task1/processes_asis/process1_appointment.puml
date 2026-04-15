@@ -1,0 +1,41 @@
+@startuml
+!theme plain
+title DFD - Процесс 1: Запись пациента (Level 1)
+
+actor "Пациент" as Patient
+actor "Ресепшен" as Reception
+
+database "D1: Excel-журналы\n(по врачам)" as Journals
+database "D2: Excel-список\nпациентов" as PatientList
+database "Общий диск (SMB)" as SharedDrive
+
+rectangle "1.0 Запись пациента" {
+  rectangle "1.1 Проверка времени" as CheckTime
+  rectangle "1.2 Внесение в журнал" as AddToJournal
+  rectangle "1.3 Регистрация пациента" as RegisterPatient
+  rectangle "1.4 Сохранение договора" as SaveContract
+}
+
+Patient --> CheckTime : "Желаемая дата, врач"
+CheckTime --> Reception : "Доступные слоты"
+Reception --> CheckTime : "Выбор времени"
+
+Reception --> AddToJournal : "ФИО, телефон, услуга"
+AddToJournal --> Journals : "Запись в Excel"
+Journals --> SharedDrive : "Хранение"
+
+Reception --> RegisterPatient : "ФИО, телефон, email"
+RegisterPatient --> PatientList : "Новая строка"
+PatientList --> SharedDrive : "Хранение"
+
+Reception --> SaveContract : "Скан PDF"
+SaveContract --> SharedDrive : "Сохранение"
+
+note right of SharedDrive
+  <b>Проблемы:</b>
+  • Нет RBAC
+  • Нет шифрования
+  • Нет аудита
+endnote
+
+@enduml

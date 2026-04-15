@@ -2,8 +2,7 @@
 !theme plain
 title C4 Context Diagram - MEDIKAMENTE TO-BE (Privacy by Design)
 
-' Исправленный стиль - светлый фон, чёрный текст
-skinparam actor {
+  skinparam actor {
   BackgroundColor #ECF0F1
   BorderColor #2C3E50
   FontColor #000000

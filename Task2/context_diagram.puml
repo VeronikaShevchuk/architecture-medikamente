@@ -1,0 +1,135 @@
+@startuml
+!theme plain
+title C4 Context Diagram - MEDIKAMENTE TO-BE (Privacy by Design)
+
+' Исправленный стиль - светлый фон, чёрный текст
+skinparam actor {
+  BackgroundColor #ECF0F1
+  BorderColor #2C3E50
+  FontColor #000000
+  FontSize 12
+  FontStyle bold
+}
+
+skinparam rectangle {
+  FontSize 11
+  BackgroundColor #E8F8F5
+  BorderColor #1ABC9C
+  FontColor #000000
+}
+
+skinparam database {
+  BackgroundColor #D5F5E3
+  BorderColor #27AE60
+  FontColor #000000
+}
+
+skinparam arrow {
+  Color #34495E
+  FontColor #34495E
+}
+
+' ===== internal users =====
+
+actor "Patient" as Patient
+actor "Doctor" as Doctor
+actor "Receptionist" as Reception
+actor "Accountant" as Accountant
+actor "Data Scientist" as DataScientist
+actor "DPO (Security Officer)" as DPO
+
+' ===== ext system =====
+
+actor "Laboratory" as Lab
+actor "Payment Gateway" as PaymentGateway
+
+' ===== system =====
+
+rectangle "MEDIKAMENTE System" {
+
+  rectangle "API Gateway" as Gateway
+  rectangle "Patient Portal" as PatientPortal
+  rectangle "Staff Portal" as StaffPortal
+
+  rectangle "Booking Service" as Booking
+  rectangle "Medical Record Service" as Medical
+  rectangle "Payment Service" as Payment
+  rectangle "Notification Service" as Notification
+
+  database "PII Database" as PII_DB
+  database "Medical Database" as Medical_DB
+  database "Finance Database" as Finance_DB
+
+  rectangle "Privacy Hub" as PrivacyHub
+  database "Consent Store" as ConsentDB
+  database "Tagging Service" as Tagging
+
+  rectangle "Privacy Compute Layer" as Compute
+  database "Data Lake" as Lake
+  rectangle "BI / ML Service" as BI
+
+  rectangle "Audit & SIEM" as Audit
+  database "Audit Logs" as AuditLogs
+}
+
+' ===== flow =====
+
+Patient --> PatientPortal : HTTPS
+PatientPortal --> Gateway : JWT
+Gateway --> PrivacyHub : Check consent
+PrivacyHub --> ConsentDB : Validate
+Gateway --> Booking : Create
+Booking --> PII_DB : Tokenize
+Gateway --> Payment : Process
+Payment --> Finance_DB : Save
+Notification --> Patient : SMS/Email
+
+Doctor --> StaffPortal : HTTPS
+StaffPortal --> Gateway : JWT
+Gateway --> PrivacyHub : Check tags
+PrivacyHub --> Tagging : Validate
+Gateway --> Medical : Access
+Medical --> Medical_DB : Encrypt
+
+Reception --> StaffPortal : HTTPS
+StaffPortal --> Gateway : JWT
+Gateway --> Booking : Manage
+Gateway --> PII_DB : Read
+
+Accountant --> StaffPortal : HTTPS
+StaffPortal --> Gateway : JWT
+Gateway --> Finance_DB : Read
+
+Lab --> Gateway : API
+Gateway --> PrivacyHub : Mask PII
+Gateway --> Medical : Save
+
+Medical_DB --> Compute : ETL
+Compute --> Lake : Anonymize
+Lake --> BI : Read
+DataScientist --> BI : Query
+
+Patient --> PatientPortal : Delete request
+PatientPortal --> PrivacyHub : Forget me
+PrivacyHub --> PII_DB : Anonymize
+
+DPO --> Audit : View
+Audit --> AuditLogs : Write
+
+Patient --> PaymentGateway : Pay
+PaymentGateway --> Gateway : Webhook
+
+
+legend right
+  <b>Privacy by Design Principles:</b>
+  | <b>#</b> | <b>Principle</b> | <b>Implementation</b> |
+  | 1 | Proactive | Privacy Hub (PIA Engine) |
+  | 2 | Privacy as Default | Data Minimization |
+  | 3 | Privacy Embedded | Tagging + RLS |
+  | 4 | Full Functionality | Privacy Compute Layer |
+  | 5 | End-to-End Security | AES-256 + Audit |
+  | 6 | Visibility | Patient Portal |
+  | 7 | Respect for User | Consent Manager |
+endlegend
+
+@enduml

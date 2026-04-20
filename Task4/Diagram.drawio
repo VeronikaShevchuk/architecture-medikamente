@@ -1,0 +1,130 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Ishikawa - Migration Bottlenecks" id="lcHnYSao51tD1nBz1TWQ">
+    <mxGraphModel dx="2369" dy="876" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="UQn_OrodZ430uToMRqCd-1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E74C3C;strokeColor=#C0392B;fontColor=#ffffff;fontSize=16;fontStyle=bold" value="УЗКИЕ МЕСТА ПРИ МИГРАЦИИ&lt;br&gt;МЕДИКАМЕНТЕ" vertex="1">
+          <mxGeometry height="80" width="250" x="830" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-2" edge="1" parent="1" source="UQn_OrodZ430uToMRqCd-3" style="endArrow=blockThin;html=1;strokeWidth=3;strokeColor=#34495E;startArrow=none;" target="UQn_OrodZ430uToMRqCd-1" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="350" y="500" as="sourcePoint" />
+            <mxPoint x="1050" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-3" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#34495E;" value="" vertex="1">
+          <mxGeometry height="20" width="20" x="70" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#3498DB;strokeColor=#2980B9;fontColor=#ffffff;fontSize=12;fontStyle=bold" value="ИНФРАСТРУКТУРА" vertex="1">
+          <mxGeometry height="40" width="160" x="320" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-5" edge="1" parent="1" source="UQn_OrodZ430uToMRqCd-4" style="endArrow=blockThin;html=1;strokeWidth=2;strokeColor=#3498DB;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="530" y="230" as="sourcePoint" />
+            <mxPoint x="540" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D6EAF8;strokeColor=#2980B9;fontColor=#000000;fontSize=10" value="Старый сервер не выдержит нагрузку" vertex="1">
+          <mxGeometry height="40" width="180" x="350" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D6EAF8;strokeColor=#2980B9;fontColor=#000000;fontSize=10" value="Сетевые лимиты (1 GbE)" vertex="1">
+          <mxGeometry height="40" width="180" x="350" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D6EAF8;strokeColor=#2980B9;fontColor=#000000;fontSize=10" value="Нет резервного канала" vertex="1">
+          <mxGeometry height="40" width="180" x="350" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#9B59B6;strokeColor=#8E44AD;fontColor=#ffffff;fontSize=12;fontStyle=bold" value="ПРОГРАММНОЕ&lt;br&gt;ОБЕСПЕЧЕНИЕ" vertex="1">
+          <mxGeometry height="40" width="160" x="540" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-10" edge="1" parent="1" source="UQn_OrodZ430uToMRqCd-9" style="endArrow=blockThin;html=1;strokeWidth=2;strokeColor=#9B59B6;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="530" y="440" as="sourcePoint" />
+            <mxPoint x="770" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8DAEF;strokeColor=#8E44AD;fontColor=#000000;fontSize=10" value="1С в файловом режиме (не масштабируется)" vertex="1">
+          <mxGeometry height="40" width="220" x="560" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-12" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8DAEF;strokeColor=#8E44AD;fontColor=#000000;fontSize=10" value="Excel-файлы не конвертируются в БД" vertex="1">
+          <mxGeometry height="40" width="220" x="560" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-13" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E8DAEF;strokeColor=#8E44AD;fontColor=#000000;fontSize=10" value="Нет API для интеграции с лабораторией" vertex="1">
+          <mxGeometry height="40" width="220" x="560" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-14" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F1C40F;strokeColor=#F39C12;fontColor=#000000;fontSize=12;fontStyle=bold" value="ДАННЫЕ" vertex="1">
+          <mxGeometry height="40" width="160" x="530" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-15" edge="1" parent="1" source="UQn_OrodZ430uToMRqCd-14" style="endArrow=blockThin;html=1;strokeWidth=2;strokeColor=#F1C40F;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="530" y="650" as="sourcePoint" />
+            <mxPoint x="710" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-16" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF9E7;strokeColor=#F39C12;fontColor=#000000;fontSize=10" value="Миграция 10 000+ строк из Excel" vertex="1">
+          <mxGeometry height="40" width="220" x="540" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-17" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF9E7;strokeColor=#F39C12;fontColor=#000000;fontSize=10" value="Дублирование данных (Excel + 1С)" vertex="1">
+          <mxGeometry height="40" width="220" x="540" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-18" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FEF9E7;strokeColor=#F39C12;fontColor=#000000;fontSize=10" value="Неструктурированные сканы PDF/JPG" vertex="1">
+          <mxGeometry height="40" width="220" x="540" y="730" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-19" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E67E22;strokeColor=#D35400;fontColor=#ffffff;fontSize=12;fontStyle=bold" value="ПЕРСОНАЛ" vertex="1">
+          <mxGeometry height="40" width="160" x="40" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-20" edge="1" parent="1" source="UQn_OrodZ430uToMRqCd-19" style="endArrow=blockThin;html=1;strokeWidth=2;strokeColor=#E67E22;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="230" y="320" as="sourcePoint" />
+            <mxPoint x="320" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-21" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDEBD0;strokeColor=#D35400;fontColor=#000000;fontSize=10" value="Сотрудники не обучены новой системе" vertex="1">
+          <mxGeometry height="40" width="220" x="70" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-22" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDEBD0;strokeColor=#D35400;fontColor=#000000;fontSize=10" value="Сопротивление изменениям" vertex="1">
+          <mxGeometry height="40" width="220" x="70" y="310" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FDEBD0;strokeColor=#D35400;fontColor=#000000;fontSize=10" value="Нехватка DevOps/Java специалистов" vertex="1">
+          <mxGeometry height="40" width="220" x="70" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-24" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ABC9C;strokeColor=#16A085;fontColor=#ffffff;fontSize=12;fontStyle=bold" value="ПРОЦЕССЫ" vertex="1">
+          <mxGeometry height="40" width="160" x="-30" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-25" edge="1" parent="1" source="UQn_OrodZ430uToMRqCd-24" style="endArrow=blockThin;html=1;strokeWidth=2;strokeColor=#1ABC9C;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="230" y="640" as="sourcePoint" />
+            <mxPoint x="200" y="510" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-26" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5F5E3;strokeColor=#16A085;fontColor=#000000;fontSize=10" value="Нет плана миграции" vertex="1">
+          <mxGeometry height="40" width="220" x="-30" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-27" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5F5E3;strokeColor=#16A085;fontColor=#000000;fontSize=10" value="Нет отката при ошибках" vertex="1">
+          <mxGeometry height="40" width="220" x="-30" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-28" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5F5E3;strokeColor=#16A085;fontColor=#000000;fontSize=10" value="Параллельная работа старых и новых систем" vertex="1">
+          <mxGeometry height="40" width="220" x="-30" y="730" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-29" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E74C3C;strokeColor=#C0392B;fontColor=#ffffff;fontSize=12;fontStyle=bold" value="БЕЗОПАСНОСТЬ" vertex="1">
+          <mxGeometry height="40" width="160" x="210" y="560" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-30" edge="1" parent="1" source="UQn_OrodZ430uToMRqCd-29" style="endArrow=blockThin;html=1;strokeWidth=2;strokeColor=#E74C3C;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="360" y="800" as="sourcePoint" />
+            <mxPoint x="440" y="510" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-31" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FADBD8;strokeColor=#C0392B;fontColor=#000000;fontSize=10" value="Данные мигрируют без шифрования" vertex="1">
+          <mxGeometry height="40" width="240" x="240" y="630" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-32" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FADBD8;strokeColor=#C0392B;fontColor=#000000;fontSize=10" value="Нет контроля доступа в процессе" vertex="1">
+          <mxGeometry height="40" width="240" x="240" y="680" as="geometry" />
+        </mxCell>
+        <mxCell id="UQn_OrodZ430uToMRqCd-33" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FADBD8;strokeColor=#C0392B;fontColor=#000000;fontSize=10" value="Утечка при отладке" vertex="1">
+          <mxGeometry height="40" width="240" x="240" y="730" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

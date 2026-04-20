@@ -1,0 +1,45 @@
+@startuml
+!theme plain
+title Физическая DFD - Текущая реализация (AS-IS)
+' Рекомендация Lucidchart: показать hardware, software, файлы, людей
+
+left to right direction
+
+' Технологии и оборудование
+actor "Сотрудник" as Employee
+
+rectangle "Физический сервер\nWindows Server 2022" as PhysicalServer {
+  rectangle "Active Directory\n(DNS, DHCP, LDAP)" as AD
+  rectangle "Файловый сервер\n(SMB)" as FileServer
+  rectangle "Exchange Mail Server" as Exchange
+}
+
+rectangle "1С:Бухгалтерия\n(файловый режим)" as AccountingApp
+rectangle "1С:Торговля и склад\n(файловый режим)" as WarehouseApp
+rectangle "Excel / Outlook" as OfficeApps
+
+rectangle "ККМ" as KKM
+rectangle "Рабочие станции\nсотрудников" as Workstations
+
+' Потоки (физические)
+Employee --> Workstations : "Работает за"
+Workstations --> OfficeApps : "Запускает Excel, Outlook"
+Workstations --> AccountingApp : "Запускает 1С"
+Workstations --> WarehouseApp : "Запускает 1С"
+
+FileServer --> Workstations : "SMB (TCP/445)"
+AD --> Workstations : "LDAP (TCP/389)"
+Exchange --> Workstations : "MAPI/HTTP"
+
+AccountingApp --> KKM : "OLE + TCP/IP"
+AccountingApp --> WarehouseApp : "OLE (внутриплатформенный)"
+
+note right of FileServer
+  <b>Физические уязвимости:</b>
+  • Нет шифрования дисков
+  • Нет DLP
+  • Файловый режим 1С
+  • SMB без защиты
+endnote
+
+@enduml

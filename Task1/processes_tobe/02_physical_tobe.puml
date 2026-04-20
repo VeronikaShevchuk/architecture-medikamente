@@ -1,0 +1,67 @@
+@startuml
+!theme plain
+title Физическая DFD - Целевая реализация (TO-BE)
+
+left to right direction
+
+actor "Пациент" as Patient
+actor "Сотрудник" as Employee
+
+rectangle "Kubernetes Cluster\n(аренда / облако)" as K8s {
+  
+  rectangle "API Gateway\n(Kong / NGINX)" as APIGateway
+  rectangle "Портал клиента\n(React, TLS 1.3)" as ClientPortal
+  rectangle "Портал сотрудника\n(RBAC)" as StaffPortal
+  
+  rectangle "PostgreSQL\n(PII - AES-256)" as PostgresPII
+  rectangle "PostgreSQL\n(Medical - RLS)" as PostgresMedical
+  rectangle "PostgreSQL\n(Payments - токены)" as PostgresPayments
+  
+  rectangle "MinIO / S3\n(Озеро данных)" as DataLake
+  rectangle "Apache Atlas\n(Тегирование)" as Atlas
+  rectangle "ELK Stack\n(логи и аудит)" as ELK
+  rectangle "Falco + Prometheus\n(алерты)" as Falco
+}
+
+rectangle "1С:Бухгалтерия\n(клиент-сервер)" as Accounting
+rectangle "Платёжный шлюз\n(YooKassa / Сбер)" as PaymentGateway
+rectangle "Внешняя лаборатория" as Lab
+
+' Потоки (физические протоколы)
+Patient --> ClientPortal : "HTTPS / TLS 1.3"
+ClientPortal --> APIGateway : "REST / gRPC (JWT)"
+
+Employee --> StaffPortal : "HTTPS + Client Cert"
+
+APIGateway --> PostgresPII : "SQL over TLS (маскирование)"
+APIGateway --> PostgresMedical : "SQL over TLS + RLS"
+APIGateway --> PostgresPayments : "SQL over TLS"
+
+PostgresMedical --> DataLake : "ETL (обезличивание)"
+DataLake --> Atlas : "Теги: pii=false, medical=true"
+
+PostgresPII --> ELK : "Логи доступа (syslog)"
+PostgresMedical --> ELK
+PostgresPayments --> ELK
+
+ELK --> Falco : "Анализ аномалий"
+Falco --> Employee : "Алерты (email, Telegram)"
+
+Patient --> PaymentGateway : "Оплата через ПШ"
+PaymentGateway --> APIGateway : "Webhook (TLS)"
+
+Lab --> APIGateway : "API с маскированием PII"
+
+Accounting --> PostgresPayments : "Выгрузка (шифрованный канал)"
+
+legend right
+  <b>Технологический стек:</b>
+  • K8s — оркестрация
+  • Postgres — БД
+  • AES-256 — шифрование
+  • RLS — row-level security
+  • ELK — логирование
+  • Falco — обнаружение аномалий
+endlegend
+
+@enduml

@@ -1,0 +1,45 @@
+@startuml
+!theme plain
+title DFD TO-BE - Процесс 1.1: Онлайн-запись (детализация)
+
+actor "Пациент" as Patient
+
+database "API Gateway\n(Kong)" as APIGateway
+database "PostgreSQL\n(слоты)" as SlotsDB
+database "Redis\n(кэш свободных слотов)" as Cache
+database "Kafka\n(событие записи)" as Kafka
+
+rectangle "1.1.1 Аутентификация" as Auth
+rectangle "1.1.2 Выбор услуги" as SelectService
+rectangle "1.1.3 Выбор врача" as SelectDoctor
+rectangle "1.1.4 Выбор даты/времени" as SelectTime
+rectangle "1.1.5 Бронирование" as Book
+rectangle "1.1.6 Оповещение" as Notify
+
+Patient --> Auth : "Логин/пароль (JWT)"
+Auth --> APIGateway : "Валидация"
+
+Patient --> SelectService : "Список услуг"
+SelectService --> SelectDoctor : "Доступные врачи"
+SelectDoctor --> SelectTime : "Слоты"
+
+SelectTime --> Cache : "Запрос свободных"
+Cache --> SlotsDB : "При промахе"
+SlotsDB --> SelectTime : "Свободные слоты"
+
+Patient --> Book : "Подтверждение"
+Book --> SlotsDB : "Резервирование (транзакция)"
+Book --> Kafka : "Событие 'BookingCreated'"
+
+Kafka --> Notify : "Триггер"
+Notify --> Patient : "Email / SMS"
+
+note right of APIGateway
+  <b>Безопасность:</b>
+  • JWT с коротким TTL
+  • Rate limiting
+  • Тегирование PII
+  • Логирование в ELK
+endnote
+
+@enduml

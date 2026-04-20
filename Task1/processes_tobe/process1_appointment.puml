@@ -1,0 +1,52 @@
+@startuml
+!theme plain
+title DFD TO-BE - Процесс 1: Запись пациента (автоматизированная)
+
+actor "Пациент" as Patient
+actor "Ресепшен" as Reception
+actor "Система уведомлений" as Notifications
+
+database "PostgreSQL PII\n(токенизированная)" as PII_DB
+database "PostgreSQL Записи\n(аудит версий)" as Booking_DB
+database "Система тегов\n(Atlas)" as Tagging
+
+rectangle "1.0 Автоматическая запись" {
+  rectangle "1.1 Онлайн-запись" as OnlineBooking
+  rectangle "1.2 Проверка доступности" as CheckAvailability
+  rectangle "1.3 Подтверждение по SMS/Email" as ConfirmBooking
+  rectangle "1.4 Управление записью (ресепшен)" as ReceptionManage
+  rectangle "1.5 Напоминание за 1 день" as Reminder
+}
+
+Patient --> OnlineBooking : "Выбор услуги, даты, врача (TLS 1.3)"
+OnlineBooking --> CheckAvailability : "API запрос"
+CheckAvailability --> Booking_DB : "Проверка слотов"
+
+Booking_DB --> OnlineBooking : "Свободное время"
+OnlineBooking --> PII_DB : "Сохранение ФИО, телефона (токен)"
+
+OnlineBooking --> ConfirmBooking : "Запись создана"
+ConfirmBooking --> Patient : "Email/SMS с подтверждением"
+
+Reception --> ReceptionManage : "Просмотр записей (RBAC)"
+ReceptionManage --> Booking_DB : "Чтение (без диагнозов)"
+
+Booking_DB --> Reminder : "За день до приёма"
+Reminder --> Notifications : "Запуск уведомления"
+Notifications --> Patient : "Push / SMS / Голосовой робот"
+
+Patient --> ConfirmBooking : "Подтверждение/отмена"
+ConfirmBooking --> Booking_DB : "Обновление статуса"
+
+Booking_DB --> Tagging : "Теги: pii, appointment"
+
+note right of Booking_DB
+  <b>Защита TO-BE:</b>
+  • TLS 1.3 на всех каналах
+  • Токенизация PII
+  • Аудит всех действий
+  • RBAC для ресепшен
+  • Автоматические напоминания
+endnote
+
+@enduml

@@ -1,0 +1,50 @@
+@startuml
+!theme plain
+title DFD TO-BE - Процесс 2: Ведение медицинской карты
+
+actor "Врач" as Doctor
+actor "Пациент" as Patient
+
+database "PostgreSQL Medical\n(AES-256 + RLS)" as Medical_DB
+database "MinIO / S3\n(шифрованные сканы)" as FileStorage
+database "Система аудита\n(ELK)" as Audit
+database "Тегирование\n(Atlas)" as Tagging
+
+rectangle "2.0 Ведение медкарты" {
+  rectangle "2.1 Аутентификация врача" as Auth
+  rectangle "2.2 Просмотр списка пациентов" as PatientList
+  rectangle "2.3 Доступ к карте (ABAC)" as AccessCheck
+  rectangle "2.4 Запись диагноза" as WriteDiagnosis
+  rectangle "2.5 Загрузка файлов" as UploadFile
+  rectangle "2.6 Просмотр пациентом (ЛК)" as PatientView
+}
+
+Doctor --> Auth : "Логин, MFA"
+Auth --> AccessCheck : "Роль doctor"
+
+AccessCheck --> PatientList : "Только свои пациенты (RLS)"
+PatientList --> Medical_DB : "SELECT WHERE doctor_id = ?"
+
+Doctor --> WriteDiagnosis : "Ввод диагноза (МКБ-10)"
+WriteDiagnosis --> Medical_DB : "INSERT с тегом special_pii"
+Medical_DB --> Audit : "Лог: врач X прочитал карту Y"
+
+Doctor --> UploadFile : "Скан анализа"
+UploadFile --> FileStorage : "AES-256"
+FileStorage --> Tagging : "Тег: medical, restricted"
+
+Patient --> PatientView : "Вход в ЛК (JWT)"
+PatientView --> AccessCheck : "Пациент имеет доступ к своей карте"
+AccessCheck --> Medical_DB : "SELECT WHERE patient_id = ?"
+Medical_DB --> Patient : "Только свои данные"
+
+note right of Medical_DB
+  <b>Защита TO-BE:</b>
+  • AES-256 для special_pii
+  • RLS (врач → только свои)
+  • ABAC (пациент → только своё)
+  • Аудит каждого чтения
+  • Шифрование файлов
+endnote
+
+@enduml

@@ -1,0 +1,42 @@
+@startuml
+!theme plain
+title DFD - Процесс 4.2: Приём денег (Level 2)
+
+actor "Пациент" as Patient
+actor "Кассир" as Cashier
+
+database "Excel: Payments.xlsx" as ExcelPayment
+database "1С:Бухгалтерия" as OneS
+database "ККМ" as KKM
+
+rectangle "4.2.1 Проверка суммы" as CheckSum
+rectangle "4.2.2 Ввод в ККМ" as EnterKKM
+rectangle "4.2.3 Печать чека" as Print
+rectangle "4.2.4 Открытие Excel" as OpenExcel
+rectangle "4.2.5 Ввод строки" as EnterRow
+rectangle "4.2.6 Открытие 1С" as OpenOneS
+rectangle "4.2.7 Создание документа" as CreateDoc
+
+Patient --> CheckSum : "Сумма"
+CheckSum --> Cashier : "Подтверждение"
+
+Cashier --> EnterKKM : "Сумма"
+EnterKKM --> Print : "Чек"
+Print --> Patient : "Чек"
+
+Cashier --> OpenExcel : "\\server\payments\Payments.xlsx"
+OpenExcel --> EnterRow : "Новая строка"
+EnterRow --> ExcelPayment : "Дата, ФИО, сумма"
+
+Cashier --> OpenOneS : "Запуск 1С"
+OpenOneS --> CreateDoc : "Поступление ДС"
+CreateDoc --> OneS : "Проводка"
+
+note right of OneS
+  <b>Риск расхождений:</b>
+  • В Excel одна сумма
+  • В 1С другая
+  • Нет автоматической сверки
+endnote
+
+@enduml

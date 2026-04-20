@@ -1,0 +1,261 @@
+@startuml AS_IS
+!theme plain
+title DFD Уровень 0 (Контекстная диаграмма) - МЕДИКАМЕНТЕ AS-IS
+' Рекомендация Lucidchart: один процесс, внешние сущности, основные потоки
+
+left to right direction
+
+' Внешние сущности (external entities)
+actor "Пациент" as Patient #LightBlue
+actor "Ресепшен" as Reception #LightGreen
+actor "Врач" as Doctor #LightYellow
+actor "Кассир" as Cashier #LightCoral
+actor "Бухгалтер" as Accountant #Lavender
+actor "Сотрудник склада" as Storekeeper #LightGray
+actor "Лаборатория" as Lab #Pink
+
+' Центральный процесс (один узел)
+rectangle "МЕДИКАМЕНТЕ\n(Процесс оказания мед. услуг)" as Clinic #White {
+  '
+}
+
+' Потоки данных (только основные входы/выходы)
+Patient --> Clinic : "ФИО, телефон, жалобы,\nоплата"
+Clinic --> Patient : "Чек, назначения, результаты"
+
+Reception --> Clinic : "Регистрация пациента,\nзапись к врачу"
+Clinic --> Reception : "Подтверждение записи"
+
+Doctor --> Clinic : "Диагноз, анализы,\nлечение"
+Clinic --> Doctor : "История пациента,\nрезультаты лаборатории"
+
+Cashier --> Clinic : "Сумма оплаты"
+Clinic --> Cashier : "Сумма к оплате"
+
+Accountant --> Clinic : "Запросы на выгрузку"
+Clinic --> Accountant : "Отчёты по платежам"
+
+Storekeeper --> Clinic : "Данные о ТМЦ"
+Clinic --> Storekeeper : "Остатки, закупки"
+
+Lab --> Clinic : "Результаты анализов"
+Clinic --> Lab : "Направления на анализы"
+
+' Легенда
+legend right
+  <b>Условные обозначения:</b>
+  = Внешняя сущность (источник/приёмник данных)
+  [ ] Процесс (преобразование данных)
+  --> Поток данных
+  === Хранилище данных (на Level 1+)
+endlegend
+
+@enduml@startuml
+!theme plain
+title DFD Уровень 0 (Контекстная диаграмма) - МЕДИКАМЕНТЕ AS-IS
+' Рекомендация Lucidchart: один процесс, внешние сущности, основные потоки
+
+left to right direction
+
+' Внешние сущности (external entities)
+actor "Пациент" as Patient #LightBlue
+actor "Ресепшен" as Reception #LightGreen
+actor "Врач" as Doctor #LightYellow
+actor "Кассир" as Cashier #LightCoral
+actor "Бухгалтер" as Accountant #Lavender
+actor "Сотрудник склада" as Storekeeper #LightGray
+actor "Лаборатория" as Lab #Pink
+
+' Центральный процесс (один узел)
+rectangle "МЕДИКАМЕНТЕ\n(Процесс оказания мед. услуг)" as Clinic #White {
+  '
+}
+
+' Потоки данных (только основные входы/выходы)
+Patient --> Clinic : "ФИО, телефон, жалобы,\nоплата"
+Clinic --> Patient : "Чек, назначения, результаты"
+
+Reception --> Clinic : "Регистрация пациента,\nзапись к врачу"
+Clinic --> Reception : "Подтверждение записи"
+
+Doctor --> Clinic : "Диагноз, анализы,\nлечение"
+Clinic --> Doctor : "История пациента,\nрезультаты лаборатории"
+
+Cashier --> Clinic : "Сумма оплаты"
+Clinic --> Cashier : "Сумма к оплате"
+
+Accountant --> Clinic : "Запросы на выгрузку"
+Clinic --> Accountant : "Отчёты по платежам"
+
+Storekeeper --> Clinic : "Данные о ТМЦ"
+Clinic --> Storekeeper : "Остатки, закупки"
+
+Lab --> Clinic : "Результаты анализов"
+Clinic --> Lab : "Направления на анализы"
+
+' Легенда
+legend right
+  <b>Условные обозначения:</b>
+  = Внешняя сущность (источник/приёмник данных)
+  [ ] Процесс (преобразование данных)
+  --> Поток данных
+  === Хранилище данных (на Level 1+)@startuml
+!theme plain
+title DFD Уровень 0 (Контекстная диаграмма) - МЕДИКАМЕНТЕ AS-IS
+' Рекомендация Lucidchart: один процесс, внешние сущности, основные потоки
+
+left to right direction
+
+' Внешние сущности (external entities)
+actor "Пациент" as Patient #LightBlue
+actor "Ресепшен" as Reception #LightGreen
+actor "Врач" as Doctor #LightYellow
+actor "Кассир" as Cashier #LightCoral
+actor "Бухгалтер" as Accountant #Lavender
+actor "Сотрудник склада" as Storekeeper #LightGray
+actor "Лаборатория" as Lab #Pink
+
+' Центральный процесс (один узел)
+rectangle "МЕДИКАМЕНТЕ\n(Процесс оказания мед. услуг)" as Clinic #White {
+  '
+}
+
+' Потоки данных (только основные входы/выходы)
+Patient --> Clinic : "ФИО, телефон, жалобы,\nоплата"
+Clinic --> Patient : "Чек, назначения, результаты"
+
+Reception --> Clinic : "Регистрация пациента,\nзапись к врачу"
+Clinic --> Reception : "Подтверждение записи"
+
+Doctor --> Clinic : "Диагноз, анализы,\nлечение"
+Clinic --> Doctor : "История пациента,\nрезультаты лаборатории"
+
+Cashier --> Clinic : "Сумма оплаты"
+Clinic --> Cashier : "Сумма к оплате"
+
+Accountant --> Clinic : "Запросы на выгрузку"
+Clinic --> Accountant : "Отчёты по платежам"
+
+Storekeeper --> Clinic : "Данные о ТМЦ"
+Clinic --> Storekeeper : "Остатки, закупки"
+
+Lab --> Clinic : "Результаты анализов"
+Clinic --> Lab : "Направления на анализы"
+
+' Легенда
+legend right
+  <b>Условные обозначения:</b>
+  = Внешняя сущность (источник/приёмник данных)
+  [ ] Процесс (преобразование данных)
+  --> Поток данных
+  === Хранилище данных (на Level 1+)
+endlegend
+
+@enduml@startuml
+!theme plain
+title DFD Уровень 0 (Контекстная диаграмма) - МЕДИКАМЕНТЕ AS-IS
+' Рекомендация Lucidchart: один процесс, внешние сущности, основные потоки
+
+left to right direction
+
+' Внешние сущности (external entities)
+actor "Пациент" as Patient #LightBlue
+actor "Ресепшен" as Reception #LightGreen
+actor "Врач" as Doctor #LightYellow
+actor "Кассир" as Cashier #LightCoral
+actor "Бухгалтер" as Accountant #Lavender
+actor "Сотрудник склада" as Storekeeper #LightGray
+actor "Лаборатория" as Lab #Pink
+
+' Центральный процесс (один узел)
+rectangle "МЕДИКАМЕНТЕ\n(Процесс оказания мед. услуг)" as Clinic #White {
+  '
+}
+
+' Потоки данных (только основные входы/выходы)
+Patient --> Clinic : "ФИО, телефон, жалобы,\nоплата"
+Clinic --> Patient : "Чек, назначения, результаты"
+
+Reception --> Clinic : "Регистрация пациента,\nзапись к врачу"
+Clinic --> Reception : "Подтверждение записи"
+
+Doctor --> Clinic : "Диагноз, анализы,\nлечение"
+Clinic --> Doctor : "История пациента,\nрезультаты лаборатории"
+
+Cashier --> Clinic : "Сумма оплаты"
+Clinic --> Cashier : "Сумма к оплате"
+
+Accountant --> Clinic : "Запросы на выгрузку"
+Clinic --> Accountant : "Отчёты по платежам"
+
+Storekeeper --> Clinic : "Данные о ТМЦ"
+Clinic --> Storekeeper : "Остатки, закупки"
+
+Lab --> Clinic : "Результаты анализов"
+Clinic --> Lab : "Направления на анализы"
+
+' Легенда
+legend right
+  <b>Условные обозначения:</b>
+  = Внешняя сущность (источник/приёмник данных)
+  [ ] Процесс (преобразование данных)
+  --> Поток данных
+  === Хранилище данных (на Level 1+)
+endlegend
+
+@enduml@startuml
+!theme plain
+title DFD Уровень 0 (Контекстная диаграмма) - МЕДИКАМЕНТЕ AS-IS
+' Рекомендация Lucidchart: один процесс, внешние сущности, основные потоки
+
+left to right direction
+
+' Внешние сущности (external entities)
+actor "Пациент" as Patient #LightBlue
+actor "Ресепшен" as Reception #LightGreen
+actor "Врач" as Doctor #LightYellow
+actor "Кассир" as Cashier #LightCoral
+actor "Бухгалтер" as Accountant #Lavender
+actor "Сотрудник склада" as Storekeeper #LightGray
+actor "Лаборатория" as Lab #Pink
+
+' Центральный процесс (один узел)
+rectangle "МЕДИКАМЕНТЕ\n(Процесс оказания мед. услуг)" as Clinic #White {
+  '
+}
+
+' Потоки данных (только основные входы/выходы)
+Patient --> Clinic : "ФИО, телефон, жалобы,\nоплата"
+Clinic --> Patient : "Чек, назначения, результаты"
+
+Reception --> Clinic : "Регистрация пациента,\nзапись к врачу"
+Clinic --> Reception : "Подтверждение записи"
+
+Doctor --> Clinic : "Диагноз, анализы,\nлечение"
+Clinic --> Doctor : "История пациента,\nрезультаты лаборатории"
+
+Cashier --> Clinic : "Сумма оплаты"
+Clinic --> Cashier : "Сумма к оплате"
+
+Accountant --> Clinic : "Запросы на выгрузку"
+Clinic --> Accountant : "Отчёты по платежам"
+
+Storekeeper --> Clinic : "Данные о ТМЦ"
+Clinic --> Storekeeper : "Остатки, закупки"
+
+Lab --> Clinic : "Результаты анализов"
+Clinic --> Lab : "Направления на анализы"
+
+' Легенда
+legend right
+  <b>Условные обозначения:</b>
+  = Внешняя сущность (источник/приёмник данных)
+  [ ] Процесс (преобразование данных)
+  --> Поток данных
+  === Хранилище данных (на Level 1+)
+endlegend
+
+@enduml
+endlegend
+
+@enduml

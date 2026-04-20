@@ -1,0 +1,58 @@
+@startuml
+!theme plain
+title DFD - Механизм тегирования конфиденциальных данных
+
+left to right direction
+
+rectangle "Источники данных" as Sources {
+  file "Excel (AS-IS)" as Excel
+  file "PDF сканы" as PDF
+  database "1С" as Ones
+}
+
+rectangle "API Gateway (тегирование)" as Tagging {
+  rectangle "Классификатор PII" as Classifier
+  rectangle "Atlas Client" as AtlasClient
+}
+
+rectangle "Хранилища с тегами" as Storage {
+  database "БД PII\nтеги: pii, contact" as DB1
+  database "БД Medical\nтеги: special_pii, medical" as DB2
+  database "БД Payments\nтеги: financial, tokenized" as DB3
+  database "Озеро данных\nтеги: anonymized, for_ml" as Lake
+}
+
+rectangle "Потребители" as Consumers {
+  actor "Врач" as Doctor
+  actor "Ресепшен" as Reception
+  actor "BI/ML" as BI
+}
+
+' Потоки
+Excel --> Tagging : "Загрузка (CSV)"
+PDF --> Tagging : "OCR + метаданные"
+Ones --> Tagging : "JDBC"
+
+Classifier --> AtlasClient : "Определяет: ФИО, диагноз, СНИЛС"
+AtlasClient --> DB1 : "WRITE с тегом pii"
+AtlasClient --> DB2 : "WRITE с тегом special_pii"
+AtlasClient --> DB3 : "WRITE с тегом financial"
+
+DB2 --> Lake : "Обезличивание (удалить ФИО)"
+Lake --> BI : "READ (только теги anonymized)"
+
+Doctor --> DB2 : "READ (ABAC: только свои)"
+Reception --> DB1 : "READ (ограниченно, без диагнозов)"
+
+' Правила тегирования
+note right of AtlasClient
+  <b>Теги по умолчанию:</b>
+  • pii — ФИО, телефон, email
+  • special_pii — диагнозы, генетика
+  • biometric — фото, отпечатки
+  • financial — карты, чеки
+  • restricted — доступ только по запросу
+  • anonymized — можно в ML
+endnote
+
+@enduml

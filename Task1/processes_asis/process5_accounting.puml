@@ -1,0 +1,45 @@
+@startuml
+!theme plain
+title DFD - Процесс 5: Бухгалтерский учёт и налоги (Level 1)
+
+actor "Бухгалтер" as Accountant
+actor "Кассир" as Cashier
+actor "Сотрудник (зарплата)" as Employee
+
+database "D5: 1С:Бухгалтерия\n(файловый режим)" as Accounting
+database "Excel-отчёты" as ExcelReports
+
+rectangle "5.0 Бухгалтерский учёт" {
+  rectangle "5.1 Процессинг платежей" as PaymentProcessing
+  rectangle "5.2 Кадровый учёт" as HR
+  rectangle "5.3 Расчёт зарплаты" as Payroll
+  rectangle "5.4 Подготовка налогов" as Tax
+  rectangle "5.5 Формирование отчётов" as Reports
+}
+
+Cashier --> PaymentProcessing : "Данные о платежах"
+PaymentProcessing --> Accounting : "Выгрузка"
+
+Accountant --> HR : "Приём/увольнение"
+HR --> Accounting : "Изменения"
+
+Accountant --> Payroll : "Отработанные часы"
+Payroll --> Accounting : "Начисление"
+
+Accountant --> Tax : "Данные для ФНС"
+Tax --> Accounting : "Документы"
+
+Accountant --> Reports : "Запрос"
+Reports --> ExcelReports : "P&L, ABC-анализ"
+ExcelReports --> Accountant : "Отчёт"
+
+Employee --> Payroll : "Заявление на аванс"
+
+note right of Accounting
+  <b>Проблемы:</b>
+  • Файловый режим
+  • Нет шифрования
+  • Один пользователь на запись
+endnote
+
+@enduml

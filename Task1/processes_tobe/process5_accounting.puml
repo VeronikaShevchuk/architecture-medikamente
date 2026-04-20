@@ -1,0 +1,47 @@
+@startuml
+!theme plain
+title DFD TO-BE - Процесс 5: Бухгалтерский учёт (автоматизированный)
+
+actor "Бухгалтер" as Accountant
+actor "Система (автоматическая)" as Auto
+
+database "1С:Бухгалтерия\n(клиент-сервер, TLS)" as Accounting
+database "PostgreSQL Finance" as Finance_DB
+database "ELK (аудит)" as Audit
+database "BI отчёты\n(Tableau/Superset)" as BI
+
+rectangle "5.0 Бухгалтерский учёт (TO-BE)" {
+  rectangle "5.1 Автоматический процессинг" as AutoProcessing
+  rectangle "5.2 Кадровый учёт (интеграция)" as HRIntegration
+  rectangle "5.3 Автоматический расчёт зарплаты" as AutoPayroll
+  rectangle "5.4 Формирование налоговой" as TaxReporting
+  rectangle "5.5 BI-дашборды" as BIDashboard
+}
+
+Finance_DB --> AutoProcessing : "Ежечасная выгрузка"
+AutoProcessing --> Accounting : "Проводки (без ручного ввода)"
+
+Accountant --> HRIntegration : "Приём/увольнение"
+HRIntegration --> Accounting : "Изменения в 1С"
+
+AutoPayroll --> Accounting : "Начисление ЗП (по часам из табеля)"
+AutoPayroll --> Accountant : "Отчёт для подписи"
+
+Accounting --> TaxReporting : "Автоформирование ФНС"
+TaxReporting --> Accountant : "Декларации"
+
+Accounting --> BIDashboard : "P&L, CashFlow, ABC-анализ"
+BIDashboard --> Accountant : "Дашборды в реальном времени"
+
+Audit --> Accounting : "Логи всех изменений"
+
+note right of AutoProcessing
+  <b>Преимущества:</b>
+  • Нет ручного ввода
+  • Сверка автоматическая
+  • Клиент-серверный режим
+  • Шифрование каналов
+  • Аудит всех операций
+endnote
+
+@enduml

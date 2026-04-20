@@ -1,0 +1,44 @@
+@startuml
+!theme plain
+title DFD - Процесс 4: Приём оплаты и учёт платежей (Level 1)
+
+actor "Пациент" as Patient
+actor "Кассир" as Cashier
+actor "Бухгалтер" as Accountant
+
+database "D5: Excel-журнал\nоплат" as PaymentExcel
+database "D5: 1С:Бухгалтерия\n(файловый режим)" as Accounting
+database "ККМ" as KKM
+
+rectangle "4.0 Приём оплаты" {
+  rectangle "4.1 Расчёт суммы" as Calculate
+  rectangle "4.2 Приём денег" as AcceptMoney
+  rectangle "4.3 Пробивка чека" as PrintReceipt
+  rectangle "4.4 Запись в Excel" as WriteExcel
+  rectangle "4.5 Запись в 1С" as WriteAccounting
+}
+
+Patient --> Calculate : "Перечень услуг"
+Calculate --> Patient : "Сумма к оплате"
+
+Patient --> AcceptMoney : "Наличные/карта"
+AcceptMoney --> PrintReceipt : "Сумма"
+PrintReceipt --> KKM : "Чек (TCP/IP+OLE)"
+
+AcceptMoney --> WriteExcel : "Сумма, ФИО, дата"
+WriteExcel --> PaymentExcel : "Строка"
+PaymentExcel --> Cashier : "Для сверки"
+
+AcceptMoney --> WriteAccounting : "Проводка"
+WriteAccounting --> Accounting : "1С запись"
+
+Accountant --> Accounting : "Сверка и отчёты"
+
+note right of PaymentExcel
+  <b>Проблема:</b>
+  • Двойной учёт (Excel + 1С)
+  • Риск расхождений
+  • Нет автоматической сверки
+endnote
+
+@enduml

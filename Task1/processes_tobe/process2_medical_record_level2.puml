@@ -1,0 +1,49 @@
+@startuml
+!theme plain
+title DFD TO-BE - Процесс 2.4: Запись диагноза (с проверками)
+
+actor "Врач" as Doctor
+
+database "PostgreSQL Medical" as Medical_DB
+database "Справочник МКБ-10" as ICD10
+database "Kafka" as Kafka
+database "ELK (аудит)" as Audit
+
+rectangle "2.4.1 Поиск пациента" as FindPatient
+rectangle "2.4.2 Валидация прав" as ValidateAccess
+rectangle "2.4.3 Ввод кода МКБ-10" as EnterICD
+rectangle "2.4.4 Ввод описания" as EnterDesc
+rectangle "2.4.5 Шифрование поля" as Encrypt
+rectangle "2.4.6 Сохранение" as Save
+rectangle "2.4.7 Отправка события" as SendEvent
+
+Doctor --> FindPatient : "ФИО/Номер карты"
+FindPatient --> ValidateAccess : "patient_id"
+
+ValidateAccess --> Medical_DB : "Проверка doctor_id = patient.doctor_id"
+Medical_DB --> ValidateAccess : "Доступ разрешён"
+
+Doctor --> EnterICD : "Код МКБ-10"
+EnterICD --> ICD10 : "Валидация"
+ICD10 --> EnterICD : "Корректный код"
+
+Doctor --> EnterDesc : "Текст диагноза"
+EnterDesc --> Encrypt : "Поле special_pii"
+
+Encrypt --> Save : "Шифрованная строка"
+Save --> Medical_DB : "INSERT/UPDATE"
+
+Save --> SendEvent : "Событие DiagnosisUpdated"
+SendEvent --> Kafka : "В топик"
+
+SendEvent --> Audit : "Лог с тегом special_pii"
+
+note right of Encrypt
+  <b>Криптография:</b>
+  • AES-256-GCM
+  • Ключи из Vault
+  • Ротация ключей
+  • Отдельный ключ для special_pii
+endnote
+
+@enduml

@@ -1,0 +1,45 @@
+@startuml
+!theme plain
+title DFD TO-BE - Процесс 3.3: Интеграция с лабораторией (API)
+
+actor "Врач" as Doctor
+actor "Лаборатория" as Lab
+
+database "API Gateway" as Gateway
+database "Kafka" as Kafka
+database "Redis (кэш)" as Cache
+database "PostgreSQL" as DB
+
+rectangle "3.3.1 Формирование запроса" as BuildRequest
+rectangle "3.3.2 Маскирование PII" as Mask
+rectangle "3.3.3 Отправка в лабораторию" as Send
+rectangle "3.3.4 Ожидание webhook" as WaitWebhook
+rectangle "3.3.5 Валидация подписи" as ValidateSignature
+rectangle "3.3.6 Сохранение результата" as SaveResult
+
+Doctor --> BuildRequest : "ID пациента, тип анализа"
+BuildRequest --> Mask : "Замена ФИО на ID_12345"
+Mask --> Send : "JSON: {patientId, analysisType}"
+
+Send --> Gateway : "POST /api/v1/order"
+Gateway --> Lab : "TLS 1.3 + API Key"
+
+Lab --> WaitWebhook : "Асинхронно"
+WaitWebhook --> ValidateSignature : "Пришёл результат"
+
+ValidateSignature --> Cache : "Проверка nonce"
+ValidateSignature --> DB : "Проверка статуса заказа"
+
+ValidateSignature --> SaveResult : "Подпись верна"
+SaveResult --> DB : "Сохранение (зашифрованно)"
+SaveResult --> Kafka : "Событие ResultsReceived"
+
+note right of ValidateSignature
+  <b>Безопасность API:</b>
+  • Подпись запросов HMAC
+  • Nonce (предотвращение replay)
+  • IP whitelist
+  • Rate limiting
+endnote
+
+@enduml

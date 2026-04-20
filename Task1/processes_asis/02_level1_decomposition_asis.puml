@@ -1,0 +1,70 @@
+@startuml
+!theme plain
+title DFD Уровень 1 - Декомпозиция процесса "МЕДИКАМЕНТЕ" (AS-IS)
+' Рекомендация Lucidchart: разбить на подпроцессы, добавить хранилища
+
+left to right direction
+
+' Внешние сущности
+actor "Пациент" as Patient
+actor "Ресепшен" as Reception
+actor "Врач" as Doctor
+actor "Кассир" as Cashier
+actor "Бухгалтер" as Accountant
+actor "Лаборатория" as Lab
+
+' Хранилища данных (data stores) — согласно Gane & Sarson
+database "D1: Excel\nЖурналы записей" as JournalStore
+database "D2: Excel\nСписок пациентов" as PatientStore
+database "D3: Папки пациентов\n(сканы PDF/JPG)" as MedicalStore
+database "D4: Excel\nРеестры анализов" as LabStore
+database "D5: 1С:Бухгалтерия\n(файловый режим)" as AccountingStore
+database "D6: 1С:Торговля\nи склад" as WarehouseStore
+
+' Подпроцессы
+rectangle "1.0\nЗапись пациента" as P1
+rectangle "2.0\nПриём и диагностика" as P2
+rectangle "3.0\nОбработка анализов" as P3
+rectangle "4.0\nОплата услуг" as P4
+rectangle "5.0\nБухгалтерский учёт" as P5
+rectangle "6.0\nУчёт ТМЦ" as P6
+
+' Потоки данных (Level 1)
+Patient --> P1 : "ФИО, телефон, услуга"
+P1 --> JournalStore : "Запись в журнал"
+P1 --> PatientStore : "Регистрация нового"
+P1 --> Reception : "Подтверждение записи"
+
+Reception --> P1 : "Запрос свободного времени"
+
+Doctor --> P2 : "Осмотр, диагноз"
+P2 --> MedicalStore : "Сохранение медкарты"
+P2 --> Patient : "Назначения"
+P2 --> Lab : "Направление анализов"
+
+Lab --> P3 : "Результаты"
+P3 --> LabStore : "Регистрация в реестре"
+P3 --> MedicalStore : "Добавление к карте"
+
+Patient --> P4 : "Оплата"
+P4 --> Cashier : "Сумма к оплате"
+Cashier --> P4 : "Приём денег"
+P4 --> AccountingStore : "Проводка"
+
+Accountant --> P5 : "Выгрузка"
+P5 --> AccountingStore : "Запросы"
+P5 --> Accountant : "Отчёты"
+
+P6 --> WarehouseStore : "Учёт ТМЦ"
+WarehouseStore --> P6 : "Остатки"
+
+' Критические замечания (как в Lucidchart — вынос проблем)
+note right of JournalStore
+  <b>ПРОБЛЕМЫ (AS-IS):</b>
+  • Нет разграничения доступа
+  • Нет шифрования
+  • Нет аудита
+  • Двойной учёт
+endnote
+
+@enduml

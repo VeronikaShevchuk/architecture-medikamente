@@ -1,0 +1,43 @@
+@startuml
+!theme plain
+title DFD - Процесс 6: Учёт ТМЦ (склад) (Level 1)
+
+actor "Сотрудник склада" as Storekeeper
+actor "Поставщик" as Supplier
+actor "Медицинский специалист" as Doctor
+
+database "D6: 1С:Торговля и склад\n(файловый режим)" as Warehouse
+database "Excel: заявки.xlsx" as Requests
+
+rectangle "6.0 Учёт ТМЦ" {
+  rectangle "6.1 Приём товара" as ReceiveGoods
+  rectangle "6.2 Оприходование" as Posting
+  rectangle "6.3 Учёт движения" as Movement
+  rectangle "6.4 Списание" as WriteOff
+  rectangle "6.5 Заказ поставщику" as Order
+}
+
+Supplier --> ReceiveGoods : "Товар, накладная"
+ReceiveGoods --> Posting : "Проверка"
+
+Posting --> Warehouse : "Приходная накладная"
+
+Doctor --> Requests : "Заявка на расходники"
+Requests --> Movement : "Выдача со склада"
+
+Movement --> Warehouse : "Перемещение"
+
+Storekeeper --> WriteOff : "Акт списания"
+WriteOff --> Warehouse : "Списание"
+
+Storekeeper --> Order : "Потребность"
+Order --> Supplier : "Заказ"
+
+note right of Warehouse
+  <b>Проблемы:</b>
+  • Файловый режим
+  • Нет интеграции с медкартами
+  • Нет автоматического учёта расходников
+endnote
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+!theme plain
+title DFD - Процесс 2.2: Запись диагноза (Level 2)
+
+actor "Врач" as Doctor
+
+database "Excel-карта\nPatient_FIO.xlsx" as ExcelCard
+database "Папка с файлами\nPatient_FIO/" as FileFolder
+
+rectangle "2.2.1 Поиск карты пациента" as FindCard
+rectangle "2.2.2 Открытие файла" as OpenFile
+rectangle "2.2.3 Выбор листа 'Диагнозы'" as SelectSheet
+rectangle "2.2.4 Ввод кода МКБ-10" as EnterICD
+rectangle "2.2.5 Ввод описания" as EnterDesc
+rectangle "2.2.6 Сохранение" as Save
+
+Doctor --> FindCard : "ФИО пациента"
+FindCard --> OpenFile : "Путь на общем диске"
+OpenFile --> SelectSheet : "Excel открыт"
+SelectSheet --> EnterICD : "Строка ввода"
+EnterICD --> EnterDesc : "Код МКБ-10"
+EnterDesc --> Save : "Текст диагноза"
+Save --> ExcelCard : "Запись"
+
+note right of EnterICD
+  <b>Риски:</b>
+  • Нет проверки МКБ-10
+  • Нет аудита изменений
+  • Кто угодно может редактировать
+endnote
+
+@enduml

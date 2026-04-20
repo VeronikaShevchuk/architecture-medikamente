@@ -1,0 +1,34 @@
+@startuml
+!theme plain
+title DFD - Процесс 3.4: Регистрация в реестре (Level 2)
+
+actor "Ресепшен" as Reception
+
+database "Excel: Registry_2024-01-15.xlsx" as DailyRegistry
+database "Excel: Registry_2024-01-16.xlsx" as NextDayRegistry
+
+rectangle "3.4.1 Выбор даты" as SelectDate
+rectangle "3.4.2 Открытие файла" as OpenFile
+rectangle "3.4.3 Поиск последней строки" as FindLastRow
+rectangle "3.4.4 Ввод ФИО пациента" as EnterName
+rectangle "3.4.5 Ввод показателей" as EnterValues
+rectangle "3.4.6 Ввод врача" as EnterDoctor
+rectangle "3.4.7 Сохранение" as Save
+
+Reception --> SelectDate : "Текущая дата"
+SelectDate --> OpenFile : "\\server\analiz\Registry_YYYY-MM-DD.xlsx"
+OpenFile --> FindLastRow : "Excel открыт"
+FindLastRow --> EnterName : "Строка N+1"
+EnterName --> EnterValues : "ФИО"
+EnterValues --> EnterDoctor : "Показатели"
+EnterDoctor --> Save : "Фамилия врача"
+Save --> DailyRegistry : "Запись"
+
+note right of EnterValues
+  <b>Особо опасные данные:</b>
+  • ВИЧ, гепатиты, онкомаркеры
+  • Нет шифрования
+  • Нет маскирования
+endnote
+
+@enduml
